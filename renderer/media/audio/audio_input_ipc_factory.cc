@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 
+#include "base/logging.h"
 #include "base/bind.h"
 #include "base/check_op.h"
 #include "base/sequenced_task_runner.h"
@@ -31,6 +32,7 @@ void CreateMojoAudioInputStreamOnMainThread(
     uint32_t total_segments) {
   RenderFrameImpl* frame = RenderFrameImpl::FromRoutingID(frame_id);
   if (frame) {
+  	VLOG(1) << __func__ << " E";
     frame->GetAudioInputStreamFactory()->CreateStream(
         std::move(client), source_params.session_id, params,
         automatic_gain_control, total_segments);
@@ -64,9 +66,9 @@ void AssociateInputAndOutputForAec(
              const std::string& output_device_id) {
             RenderFrameImpl* frame = RenderFrameImpl::FromRoutingID(frame_id);
             if (frame) {
+		      VLOG(1) << __func__ << " E";
               frame->GetAudioInputStreamFactory()
-                  ->AssociateInputAndOutputForAec(input_stream_id,
-                                                  output_device_id);
+                  ->AssociateInputAndOutputForAec(input_stream_id, output_device_id);
             }
           },
           frame_id, input_stream_id, output_device_id));
@@ -81,6 +83,7 @@ AudioInputIPCFactory::AudioInputIPCFactory(
     : main_task_runner_(std::move(main_task_runner)),
       io_task_runner_(std::move(io_task_runner)) {
   DCHECK(!instance_);
+  VLOG(1) << __func__ << " E";
   instance_ = this;
 }
 
@@ -93,12 +96,11 @@ std::unique_ptr<media::AudioInputIPC> AudioInputIPCFactory::CreateAudioInputIPC(
     int frame_id,
     const media::AudioSourceParameters& source_params) const {
   CHECK(!source_params.session_id.is_empty());
+  VLOG(1) << __func__ << " E";
   return std::make_unique<MojoAudioInputIPC>(
       source_params,
-      base::BindRepeating(&CreateMojoAudioInputStream, main_task_runner_,
-                          frame_id),
-      base::BindRepeating(&AssociateInputAndOutputForAec, main_task_runner_,
-                          frame_id));
+      base::BindRepeating(&CreateMojoAudioInputStream, main_task_runner_, frame_id),
+      base::BindRepeating(&AssociateInputAndOutputForAec, main_task_runner_, frame_id));
 }
 
 }  // namespace content

@@ -6,6 +6,7 @@
 
 #include <algorithm>
 
+#include "base/logging.h"
 #include "base/bind.h"
 #include "base/check.h"
 #include "base/metrics/histogram_macros.h"
@@ -59,6 +60,7 @@ scoped_refptr<media::AudioOutputDevice> NewOutputDevice(
     int render_frame_id,
     const media::AudioSinkParameters& params,
     base::TimeDelta auth_timeout) {
+  VLOG(1) << __func__ << " E";
   auto device = base::MakeRefCounted<media::AudioOutputDevice>(
       AudioOutputIPCFactory::get()->CreateAudioOutputIPC(render_frame_id),
       AudioOutputIPCFactory::get()->io_task_runner(), params, auth_timeout);
@@ -139,8 +141,7 @@ AudioDeviceFactory::NewAudioRendererSink(
 
   UMA_HISTOGRAM_BOOLEAN("Media.Audio.Render.SinkCache.UsedForSinkCreation",
                         false);
-  return NewFinalAudioRendererSink(render_frame_id, params,
-                                   GetDefaultAuthTimeout());
+  return NewFinalAudioRendererSink(render_frame_id, params, GetDefaultAuthTimeout());
 }
 
 // static
@@ -178,7 +179,7 @@ AudioDeviceFactory::NewAudioCapturerSource(
     if (source)
       return source;
   }
-
+  VLOG(1) << __func__ << " E";
   return base::MakeRefCounted<media::AudioInputDevice>(
       AudioInputIPCFactory::get()->CreateAudioInputIPC(render_frame_id, params),
       media::AudioInputDevice::Purpose::kUserInput);
@@ -224,8 +225,7 @@ AudioDeviceFactory::NewFinalAudioRendererSink(
     base::TimeDelta auth_timeout) {
   if (factory_) {
     scoped_refptr<media::AudioRendererSink> sink =
-        factory_->CreateFinalAudioRendererSink(render_frame_id, params,
-                                               auth_timeout);
+        factory_->CreateFinalAudioRendererSink(render_frame_id, params, auth_timeout);
     if (sink)
       return sink;
   }

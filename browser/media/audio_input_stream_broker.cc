@@ -164,6 +164,7 @@ void AudioInputStreamBroker::CreateStream(
   // several users of the same audio log. Since this audio log is for a single
   // stream, the component id used doesn't matter.
   constexpr int log_component_id = 0;
+ 
   factory->CreateInputStream(
       std::move(stream_receiver), std::move(client), std::move(observer),
       MediaInternals::GetInstance()->CreateMojoAudioLog(

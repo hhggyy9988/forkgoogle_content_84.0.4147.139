@@ -127,13 +127,11 @@ class CONTENT_EXPORT VideoCaptureHost
   // A map of VideoCaptureControllerID to the VideoCaptureController to which it
   // is connected. An entry in this map holds a null controller while it is in
   // the process of starting.
-  std::map<VideoCaptureControllerID, base::WeakPtr<VideoCaptureController>>
-      controllers_;
+  std::map<VideoCaptureControllerID, base::WeakPtr<VideoCaptureController>> controllers_;
 
   // VideoCaptureObservers map, each one is used and should be valid between
   // Start() and the corresponding Stop().
-  std::map<base::UnguessableToken,
-           mojo::Remote<media::mojom::VideoCaptureObserver>>
+  std::map<base::UnguessableToken,mojo::Remote<media::mojom::VideoCaptureObserver>>
       device_id_to_observer_map_;
 
   base::WeakPtrFactory<VideoCaptureHost> weak_factory_{this};

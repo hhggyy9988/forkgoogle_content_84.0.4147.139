@@ -501,6 +501,7 @@ void VideoCaptureController::OnFrameReadyInBuffer(
                "VideoCaptureController::OnFrameReadyInBuffer");
 
   frame_drop_log_state_ = FrameDropLogState();
+  VLOG(1) << "VideoCaptureController::OnFrameReadyInBuffer E";
 
   auto buffer_context_iter = FindUnretiredBufferContextFromBufferId(buffer_id);
   DCHECK(buffer_context_iter != buffer_contexts_.end());
@@ -529,8 +530,7 @@ void VideoCaptureController::OnFrameReadyInBuffer(
         NOTREACHED() << "Unexpected duplicate buffer: " << buffer_context_id;
 
       buffer_context_iter->IncreaseConsumerCount();
-      client->event_handler->OnBufferReady(client->controller_id,
-                                           buffer_context_id, frame_info);
+      client->event_handler->OnBufferReady(client->controller_id, buffer_context_id, frame_info);
     }
     if (buffer_context_iter->HasConsumers()) {
       buffer_context_iter->set_read_permission(

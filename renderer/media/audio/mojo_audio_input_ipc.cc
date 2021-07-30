@@ -41,11 +41,13 @@ void MojoAudioInputIPC::CreateStream(media::AudioInputIPCDelegate* delegate,
 
   mojo::PendingRemote<mojom::RendererAudioInputStreamFactoryClient> client;
   factory_client_receiver_.Bind(client.InitWithNewPipeAndPassReceiver());
+
   factory_client_receiver_.set_disconnect_handler(base::BindOnce(
       &media::AudioInputIPCDelegate::OnError, base::Unretained(delegate_)));
 
-  stream_creator_.Run(source_params_, std::move(client), params,
-                      automatic_gain_control, total_segments);
+  VLOG(1) << __func__ << " E";
+  // huangguanyuan: this callback call to browser(RendererAudioInputStreamFactory / renderer_audio_input_stream_factory.mojom) process to CreateStream.
+  stream_creator_.Run(source_params_, std::move(client), params, automatic_gain_control, total_segments);
 }
 
 void MojoAudioInputIPC::RecordStream() {
@@ -103,8 +105,7 @@ void MojoAudioInputIPC::StreamCreated(
       data_pipe->shared_memory;
   DCHECK(shared_memory_region.IsValid());
 
-  delegate_->OnStreamCreated(std::move(shared_memory_region),
-                             std::move(socket_handle), initially_muted);
+  delegate_->OnStreamCreated(std::move(shared_memory_region), std::move(socket_handle), initially_muted);
 }
 
 void MojoAudioInputIPC::OnError() {

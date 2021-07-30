@@ -6,6 +6,7 @@
 
 #include <utility>
 
+#include "base/logging.h"
 #include "base/bind.h"
 #include "base/bind_helpers.h"
 
@@ -26,8 +27,7 @@ CreateRemoteAndStoreReceiver(
 AudioInputStreamHandle::AudioInputStreamHandle(
     mojo::PendingRemote<mojom::RendererAudioInputStreamFactoryClient>
         client_pending_remote,
-    media::MojoAudioInputStream::CreateDelegateCallback
-        create_delegate_callback,
+    media::MojoAudioInputStream::CreateDelegateCallback create_delegate_callback,
     DeleterCallback deleter_callback)
     : stream_id_(base::UnguessableToken::Create()),
       deleter_callback_(std::move(deleter_callback)),
@@ -42,6 +42,8 @@ AudioInputStreamHandle::AudioInputStreamHandle(
   // Unretained is safe since |this| owns |stream_| and |client_remote_|.
   DCHECK(client_remote_);
   DCHECK(deleter_callback_);
+  VLOG(1) << __func__ << " E";
+  
   client_remote_.set_disconnect_handler(base::BindOnce(
       &AudioInputStreamHandle::CallDeleter, base::Unretained(this)));
 }
@@ -63,6 +65,7 @@ void AudioInputStreamHandle::OnCreated(
   DCHECK(client_remote_);
   DCHECK(deleter_callback_)
       << "|deleter_callback_| was called, but |this| hasn't been destructed!";
+  VLOG(1) << __func__ << " E";
   client_remote_->StreamCreated(
       std::move(pending_stream_), std::move(pending_stream_client_),
       std::move(data_pipe), initially_muted, stream_id_);

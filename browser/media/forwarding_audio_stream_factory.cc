@@ -6,6 +6,7 @@
 
 #include <utility>
 
+#include "base/logging.h"
 #include "base/bind.h"
 #include "base/check_op.h"
 #include "base/location.h"
@@ -84,9 +85,9 @@ void ForwardingAudioStreamFactory::Core::CreateInputStream(
         renderer_factory_client) {
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
 
+  VLOG(1) << __func__ << " E";
   // |this| owns |inputs_|, so Unretained is safe.
-  inputs_
-      .insert(broker_factory_->CreateAudioInputStreamBroker(
+  inputs_.insert(broker_factory_->CreateAudioInputStreamBroker(
           render_process_id, render_frame_id, device_id, params,
           shared_memory_count, user_input_monitor_, enable_agc,
           base::BindOnce(&ForwardingAudioStreamFactory::Core::RemoveInput,
@@ -116,9 +117,9 @@ void ForwardingAudioStreamFactory::Core::CreateOutputStream(
     mojo::PendingRemote<media::mojom::AudioOutputStreamProviderClient> client) {
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
 
+  VLOG(1) << __func__ << " E";
   // |this| owns |outputs_|, so Unretained is safe.
-  outputs_
-      .insert(broker_factory_->CreateAudioOutputStreamBroker(
+  outputs_.insert(broker_factory_->CreateAudioOutputStreamBroker(
           render_process_id, render_frame_id, ++stream_id_counter_, device_id,
           params, group_id_,
           base::BindOnce(&ForwardingAudioStreamFactory::Core::RemoveOutput,

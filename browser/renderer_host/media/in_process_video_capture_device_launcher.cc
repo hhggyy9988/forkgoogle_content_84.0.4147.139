@@ -264,8 +264,7 @@ InProcessVideoCaptureDeviceLauncher::CreateDeviceClient(
           base::BindRepeating(&media::VideoFrameReceiver::OnLog,
                               receiver_on_io_thread)));
 #else
-  return std::make_unique<media::VideoCaptureDeviceClient>(
-      requested_buffer_type, std::move(receiver), std::move(buffer_pool));
+  return std::make_unique<media::VideoCaptureDeviceClient>(requested_buffer_type, std::move(receiver), std::move(buffer_pool));
 #endif  // defined(OS_CHROMEOS)
 }
 

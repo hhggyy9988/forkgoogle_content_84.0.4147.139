@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 
+#include "base/logging.h"
 #include "base/bind.h"
 #include "base/callback.h"
 #include "base/check_op.h"
@@ -76,16 +77,15 @@ class RenderFrameAudioOutputStreamFactory::Core final
         mojo::PendingRemote<media::mojom::AudioOutputStreamProviderClient>
             provider_client) final {
       DCHECK_CURRENTLY_ON(BrowserThread::IO);
+	  VLOG(1) << __func__ << " E";
+	  
       TRACE_EVENT1("audio",
                    "RenderFrameAudioOutputStreamFactory::ProviderImpl::Acquire",
                    "raw device id", device_id_);
 
-      base::WeakPtr<ForwardingAudioStreamFactory::Core> factory =
-          owner_->forwarding_factory_;
+      base::WeakPtr<ForwardingAudioStreamFactory::Core> factory =  owner_->forwarding_factory_;
       if (factory) {
-        factory->CreateOutputStream(owner_->process_id_, owner_->frame_id_,
-                                    device_id_, params,
-                                    std::move(provider_client));
+        factory->CreateOutputStream(owner_->process_id_, owner_->frame_id_, device_id_, params, std::move(provider_client));
       }
 
       // Since the stream creation has been propagated, |this| is no longer
@@ -160,11 +160,13 @@ RenderFrameAudioOutputStreamFactory::RenderFrameAudioOutputStreamFactory(
                      audio_system,
                      media_stream_manager,
                      std::move(receiver))) {
+  VLOG(1) << __func__ << " E";
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
 }
 
 RenderFrameAudioOutputStreamFactory::~RenderFrameAudioOutputStreamFactory() {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+  VLOG(1) << __func__ << " E";
 
   // Ensure |core_| is deleted on the right thread. DeleteOnIOThread isn't used
   // as it doesn't post in case it is already executed on the right thread. That
@@ -189,6 +191,7 @@ RenderFrameAudioOutputStreamFactory::Core::Core(
       frame_id_(frame->GetRoutingID()),
       authorization_handler_(audio_system, media_stream_manager, process_id_) {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+  VLOG(1) << __func__ << " E";
 
   ForwardingAudioStreamFactory::Core* tmp_factory =
       ForwardingAudioStreamFactory::CoreForFrame(frame);
@@ -199,7 +202,8 @@ RenderFrameAudioOutputStreamFactory::Core::Core(
     // it's fine to drop the request.
     return;
   }
-
+  
+  VLOG(1) << __func__ << " E";
   forwarding_factory_ = tmp_factory->AsWeakPtr();
 
   // Unretained is safe since the destruction of |this| is posted to the IO
@@ -212,6 +216,7 @@ RenderFrameAudioOutputStreamFactory::Core::Core(
 void RenderFrameAudioOutputStreamFactory::Core::Init(
     mojo::PendingReceiver<mojom::RendererAudioOutputStreamFactory> receiver) {
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
+  VLOG(1) << __func__ << " E";
 
   receiver_.Bind(std::move(receiver));
 }
@@ -223,6 +228,8 @@ void RenderFrameAudioOutputStreamFactory::Core::RequestDeviceAuthorization(
     const std::string& device_id,
     RequestDeviceAuthorizationCallback callback) {
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
+  VLOG(1) << __func__ << " E";
+  
   TRACE_EVENT2(
       "audio",
       "RenderFrameAudioOutputStreamFactory::RequestDeviceAuthorization",

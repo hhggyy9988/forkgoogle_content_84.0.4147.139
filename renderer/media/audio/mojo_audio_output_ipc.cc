@@ -68,6 +68,7 @@ void MojoAudioOutputIPC::CreateStream(
   DCHECK(io_task_runner_->RunsTasksInCurrentSequence());
   DCHECK(delegate);
   DCHECK(!StreamCreationRequested());
+
   if (!AuthorizationRequested()) {
     DCHECK(!delegate_);
     delegate_ = delegate;
@@ -197,8 +198,7 @@ void MojoAudioOutputIPC::DoRequestDeviceAuthorization(
     return;
   }
 
-  static_assert(sizeof(int) == sizeof(int32_t),
-                "sizeof(int) == sizeof(int32_t)");
+  static_assert(sizeof(int) == sizeof(int32_t), "sizeof(int) == sizeof(int32_t)");
   factory->RequestDeviceAuthorization(
       MakeProviderReceiver(),
       session_id.is_empty() ? base::Optional<base::UnguessableToken>()

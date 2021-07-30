@@ -4062,7 +4062,7 @@ void RenderFrameHostImpl::EvictFromBackForwardCacheWithReasons(
     // navigation deletes the NavigationRequest associated with the evicted
     // frame (preventing use-after-free).
     // This should also happen asynchronously as eviction might happen in the
-    // middle of another navigation â€” we should not try to restart the
+    // middle of another navigation â€?we should not try to restart the
     // navigation in that case.
     // NOTE: Here we rely on the PostTask inside this function running before
     // the task posted to destroy the evicted frames below.
@@ -6907,8 +6907,8 @@ void RenderFrameHostImpl::CreateAudioInputStreamFactory(
   BrowserMainLoop* browser_main_loop = BrowserMainLoop::GetInstance();
   DCHECK(browser_main_loop);
   MediaStreamManager* msm = browser_main_loop->media_stream_manager();
-  audio_service_audio_input_stream_factory_.emplace(std::move(receiver), msm,
-                                                    this);
+  VLOG(1) << __func__ << " E";
+  audio_service_audio_input_stream_factory_.emplace(std::move(receiver), msm, this);
 }
 
 void RenderFrameHostImpl::CreateAudioOutputStreamFactory(
@@ -6917,6 +6917,7 @@ void RenderFrameHostImpl::CreateAudioOutputStreamFactory(
       BrowserMainLoop::GetInstance()->audio_system();
   MediaStreamManager* media_stream_manager =
       BrowserMainLoop::GetInstance()->media_stream_manager();
+  VLOG(1) << __func__ << " E";
   audio_service_audio_output_stream_factory_.emplace(
       this, audio_system, media_stream_manager, std::move(receiver));
 }

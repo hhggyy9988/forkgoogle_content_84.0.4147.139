@@ -85,8 +85,7 @@ class CONTENT_EXPORT MojoAudioInputIPC
   // Initialized on StreamCreated.
   base::Optional<base::UnguessableToken> stream_id_;
   mojo::Receiver<AudioInputStreamClient> stream_client_receiver_{this};
-  mojo::Receiver<RendererAudioInputStreamFactoryClient>
-      factory_client_receiver_{this};
+  mojo::Receiver<RendererAudioInputStreamFactoryClient> factory_client_receiver_{this};
   media::AudioInputIPCDelegate* delegate_ = nullptr;
 
   base::WeakPtrFactory<MojoAudioInputIPC> weak_factory_{this};

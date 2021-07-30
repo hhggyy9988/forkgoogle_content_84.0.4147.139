@@ -7,6 +7,7 @@
 #include <utility>
 
 #include "base/bind.h"
+#include "base/logging.h"
 #include "base/metrics/histogram_macros.h"
 #include "base/trace_event/trace_event.h"
 #include "content/browser/media/media_internals.h"
@@ -115,9 +116,9 @@ void AudioOutputStreamBroker::CreateStream(
     audio::mojom::StreamFactory* factory) {
   DCHECK_CALLED_ON_VALID_SEQUENCE(owning_sequence_);
   DCHECK(!observer_receiver_.is_bound());
-  TRACE_EVENT_NESTABLE_ASYNC_BEGIN1("audio", "CreateStream", this, "device id",
-                                    output_device_id_);
+  TRACE_EVENT_NESTABLE_ASYNC_BEGIN1("audio", "CreateStream", this, "device id", output_device_id_);
   stream_creation_start_time_ = base::TimeTicks::Now();
+  VLOG(1) << __func__ << " E";
 
   // Set up observer ptr. Unretained is safe because |this| owns
   // |observer_receiver_|.
@@ -160,6 +161,7 @@ void AudioOutputStreamBroker::StreamCreated(
     return;
   }
 
+  VLOG(1) << __func__ << " E";
   client_->Created(std::move(stream), std::move(data_pipe));
 }
 

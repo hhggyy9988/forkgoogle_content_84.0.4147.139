@@ -157,9 +157,8 @@ RenderFrameAudioInputStreamFactory::RenderFrameAudioInputStreamFactory(
     mojo::PendingReceiver<mojom::RendererAudioInputStreamFactory> receiver,
     MediaStreamManager* media_stream_manager,
     RenderFrameHost* render_frame_host)
-    : core_(new Core(std::move(receiver),
-                     media_stream_manager,
-                     render_frame_host)) {
+    : core_(new Core(std::move(receiver), media_stream_manager, render_frame_host)) {
+  VLOG(1) << __func__ << " E";
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
 }
 
@@ -183,6 +182,7 @@ RenderFrameAudioInputStreamFactory::Core::Core(
       frame_id_(render_frame_host->GetRoutingID()),
       origin_(render_frame_host->GetLastCommittedOrigin()) {
   DCHECK_CURRENTLY_ON(BrowserThread::UI);
+  VLOG(1) << __func__ << " E";
 
   ForwardingAudioStreamFactory::Core* tmp_factory =
       ForwardingAudioStreamFactory::CoreForFrame(render_frame_host);
@@ -195,6 +195,7 @@ RenderFrameAudioInputStreamFactory::Core::Core(
   }
 
   forwarding_factory_ = tmp_factory->AsWeakPtr();
+  VLOG(1) << __func__ << " E";
 
   // Unretained is safe since the destruction of |this| is posted to the IO
   // thread.
@@ -210,6 +211,7 @@ RenderFrameAudioInputStreamFactory::Core::~Core() {
 void RenderFrameAudioInputStreamFactory::Core::Init(
     mojo::PendingReceiver<mojom::RendererAudioInputStreamFactory> receiver) {
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
+  VLOG(1) << __func__ << " E";
   receiver_.Bind(std::move(receiver));
 }
 
@@ -225,6 +227,7 @@ void RenderFrameAudioInputStreamFactory::Core::CreateStream(
 
   if (!forwarding_factory_)
     return;
+  VLOG(1) << __func__ << " E";
 
   const blink::MediaStreamDevice* device =
       media_stream_manager_->audio_input_device_manager()->GetOpenedDeviceById(
@@ -259,6 +262,7 @@ void RenderFrameAudioInputStreamFactory::Core::CreateStream(
       IncrementDesktopCaptureCounter(SYSTEM_LOOPBACK_AUDIO_CAPTURER_CREATED);
     return;
   } else {
+  	VLOG(1) << __func__ << " E";
     forwarding_factory_->CreateInputStream(
         process_id_, frame_id_, device->id, audio_params, shared_memory_count,
         automatic_gain_control, std::move(client));
@@ -282,6 +286,7 @@ void RenderFrameAudioInputStreamFactory::Core::CreateLoopbackStream(
   if (!loopback_source || !forwarding_factory_)
     return;
 
+  VLOG(1) << __func__ << " E";
   forwarding_factory_->CreateLoopbackStream(
       process_id_, frame_id_, loopback_source, audio_params,
       shared_memory_count, disable_local_echo, std::move(client));
@@ -337,6 +342,7 @@ void RenderFrameAudioInputStreamFactory::Core::
   DCHECK_CURRENTLY_ON(BrowserThread::IO);
   if (!forwarding_factory_)
     return;
+  VLOG(1) << __func__ << " E";
   forwarding_factory_->AssociateInputAndOutputForAec(input_stream_id,
                                                      raw_output_device_id);
 }

@@ -6,6 +6,7 @@
 
 #include <utility>
 
+#include "base/logging.h"
 #include "base/bind.h"
 #include "base/location.h"
 #include "base/task/post_task.h"
@@ -36,6 +37,7 @@ class AudioStreamBrokerFactoryImpl final : public AudioStreamBrokerFactory {
       AudioStreamBroker::DeleterCallback deleter,
       mojo::PendingRemote<mojom::RendererAudioInputStreamFactoryClient>
           renderer_factory_client) final {
+    VLOG(1) << __func__ << " E";
     return std::make_unique<AudioInputStreamBroker>(
         render_process_id, render_frame_id, device_id, params,
         shared_memory_count, user_input_monitor, enable_agc, std::move(deleter),
@@ -67,6 +69,7 @@ class AudioStreamBrokerFactoryImpl final : public AudioStreamBrokerFactory {
       AudioStreamBroker::DeleterCallback deleter,
       mojo::PendingRemote<media::mojom::AudioOutputStreamProviderClient> client)
       final {
+    VLOG(1) << __func__ << " E";
     return std::make_unique<AudioOutputStreamBroker>(
         render_process_id, render_frame_id, stream_id, output_device_id, params,
         group_id, std::move(deleter), std::move(client));

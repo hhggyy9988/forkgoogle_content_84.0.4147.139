@@ -126,8 +126,7 @@ void VideoCaptureHost::OnNewBuffer(
     return;
 
   if (base::Contains(device_id_to_observer_map_, controller_id)) {
-    device_id_to_observer_map_[controller_id]->OnNewBuffer(
-        buffer_id, std::move(buffer_handle));
+    device_id_to_observer_map_[controller_id]->OnNewBuffer(buffer_id, std::move(buffer_handle));
   }
 }
 
@@ -187,7 +186,7 @@ void VideoCaptureHost::Start(
     const base::UnguessableToken& session_id,
     const media::VideoCaptureParams& params,
     mojo::PendingRemote<media::mojom::VideoCaptureObserver> observer) {
-  DVLOG(1) << __func__ << " session_id=" << session_id
+  VLOG(1) << __func__ << " session_id=" << session_id
            << ", device_id=" << device_id << ", format="
            << media::VideoCaptureFormat::ToString(params.requested_format);
   DCHECK_CURRENTLY_ON(BrowserThread::IO);

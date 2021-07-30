@@ -2636,10 +2636,8 @@ class CONTENT_EXPORT RenderFrameHostImpl
   bool has_before_unload_handler_ = false;
   bool has_unload_handler_ = false;
 
-  base::Optional<RenderFrameAudioOutputStreamFactory>
-      audio_service_audio_output_stream_factory_;
-  base::Optional<RenderFrameAudioInputStreamFactory>
-      audio_service_audio_input_stream_factory_;
+  base::Optional<RenderFrameAudioOutputStreamFactory>  audio_service_audio_output_stream_factory_;
+  base::Optional<RenderFrameAudioInputStreamFactory>  audio_service_audio_input_stream_factory_;
 
   // Hosts media::mojom::InterfaceFactory for the RenderFrame and forwards
   // media::mojom::InterfaceFactory calls to the remote "media" service.
